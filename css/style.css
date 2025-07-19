@@ -1,0 +1,860 @@
+/* Variables de Colores */
+:root {
+    --primary-color: #FFA500; /* Naranja más fuerte para Mercado Libre */
+    --secondary-color: #FFD700; /* Amarillo ocre para fondo */
+    --text-color: #333;
+    --white-color: #fff;
+    --gray-light: #f4f4f4;
+    --gray-medium: rgba(128, 128, 128, 0.7); /* Gris con 70% de transparencia */
+    --button-hover: rgba(128, 128, 128, 0.35); /* Gris al 35% hover */
+    --button-active: rgba(128, 128, 128, 0.65); /* Gris al 65% click */
+    --lila-gradient-start: #D8BFD8; /* Lila para el slider móvil */
+    --blue-dark-gradient-end: #00008B; /* Azul oscuro para el slider móvil */
+    --modal-overlay-dark: rgba(0, 0, 0, 0.7); /* Fondo oscuro para modal */
+}
+
+/* Reset y Estilos Generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    overflow-x: hidden; /* Evitar scroll horizontal */
+}
+
+a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Eliminar espacio extra debajo de las imágenes */
+}
+
+/* Splash Screen */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+    -webkit-transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+    overflow: hidden; /* Asegurar fullscreen */
+}
+
+.splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-logo {
+    width: 150px;
+    height: 150px;
+    animation: pulse 1.5s infinite alternate; /* Animación de agrandar y encoger */
+}
+
+.loading-text {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.8);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+/* PWA Install Prompt */
+.install-prompt-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(to right, var(--secondary-color), orange);
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: none; /* Oculto por defecto, se muestra con JS */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 1000;
+    animation: slideInUp 0.5s ease-out;
+    -webkit-animation: slideInUp 0.5s ease-out;
+    width: 90%; /* Ancho completo para móviles */
+    max-width: 400px; /* Limitar ancho en desktop */
+}
+
+.install-prompt-container.show {
+    display: flex;
+}
+
+.install-prompt-text {
+    color: var(--text-color);
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: justify; /* Justificado al ancho */
+    width: 100%;
+}
+
+.install-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.install-button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.install-button:active {
+    background-color: var(--button-active);
+}
+
+.arrow-icon {
+    font-size: 1.5em;
+    line-height: 1;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%) translateX(-50%);
+    }
+    to {
+        transform: translateY(0) translateX(-50%);
+    }
+}
+
+/* Header y Navegación */
+.header {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo img {
+    height: 40px; /* Tamaño del logo en el header */
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links a {
+    color: var(--white-color);
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--gray-light);
+}
+
+/* Submenu */
+.dropdown {
+    position: relative;
+}
+
+.dropdown .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--primary-color);
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.dropdown:hover .submenu {
+    display: block;
+}
+
+.submenu li {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.submenu li:last-child {
+    border-bottom: none;
+}
+
+.submenu a {
+    color: var(--white-color);
+    display: block;
+    white-space: nowrap;
+}
+
+/* Burger Menu (Mobile) */
+.burger-menu {
+    display: none; /* Oculto por defecto en desktop */
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 20px; /* Altura para 3 spans con gap */
+    cursor: pointer;
+    position: relative;
+    z-index: 100; /* Asegurar que esté por encima del menú deslizable */
+}
+
+.burger-menu span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: var(--white-color);
+    transition: all 0.3s ease-in-out;
+    border-radius: 2px;
+}
+
+/* Burger Menu Animation */
+.burger-menu.active span:nth-child(1) {
+    transform: translateY(8.5px) rotate(45deg);
+}
+
+.burger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-menu.active span:nth-child(3) {
+    transform: translateY(-8.5px) rotate(-45deg);
+}
+
+
+/* Fixed Header on Scroll */
+.header.scrolled {
+    padding: 5px 0;
+    background-color: var(--gray-medium); /* Fondo más oscuro y transparente al hacer scroll */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/hero-bg.jpg') no-repeat center center/cover;
+    color: var(--white-color);
+    text-align: center;
+    padding: 100px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Sombra para la sección hero */
+}
+
+.hero-section h1 {
+    font-size: 3em;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-section p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Product Sections */
+.product-section {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil al contenedor de los productos */
+}
+
+.product-section h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    color: var(--primary-color);
+    position: relative;
+    padding-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para los títulos de sección (items internos) */
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.product-section h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    width: 80px;
+    height: 3px;
+    background-color: var(--primary-color);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.product-card {
+    background-color: var(--gray-light);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para los item internos de la página (product cards) */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 15px;
+    text-align: center;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px; /* Altura fija para las imágenes */
+    object-fit: cover; /* Asegurar que la imagen cubra el área */
+    border-bottom: 1px solid #ddd;
+}
+
+.product-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.product-info h3 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.product-info .price {
+    font-size: 1.3em;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.product-card .actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.buy-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.buy-button:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+.icon-button {
+    background-color: var(--gray-medium);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+}
+
+.icon-button:hover {
+    background-color: var(--button-hover);
+}
+
+.icon-button:active {
+    background-color: var(--button-active);
+}
+
+/* Contact Section */
+.contact-section {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.contact-section h2 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.contact-section p {
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    line-height: 1.8;
+}
+
+.contact-section a {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.contact-form .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.contact-form .form-group input,
+.contact-form .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.contact-form .send-message-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    align-self: center; /* Centrar el botón */
+    margin-top: 10px;
+}
+
+.contact-form .send-message-button:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+
+/* FAQ Section */
+.faq-section {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.faq-section h2 {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.faq-item h3 {
+    font-size: 1.3em;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.faq-item p {
+    font-size: 1em;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--text-color); /* Fondo oscuro */
+    color: var(--white-color);
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.footer p {
+    margin-bottom: 10px;
+}
+
+.social-share .share-page-button {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.social-share .share-page-button:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+/* Modal Styles */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: var(--modal-overlay-dark); /* Black w/ opacity */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px); /* Efecto de desenfoque */
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--white-color);
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: fadeInScale 0.3s ease-out;
+    -webkit-animation: fadeInScale 0.3s ease-out;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    text-align: center;
+}
+
+.modal-image-slider {
+    width: 100%;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+#modalProductImage {
+    width: 100%;
+    height: 300px; /* Altura fija para la imagen del modal */
+    object-fit: contain; /* Asegura que la imagen completa sea visible */
+    border-radius: 5px;
+    background-color: #f0f0f0; /* Fondo claro para imágenes transparentes */
+}
+
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 10px;
+}
+
+.slider-nav button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--white-color);
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+}
+
+.slider-nav button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#modalProductName {
+    font-size: 1.8em;
+    color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+#modalProductDescription {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.modal-price-actions-wrapper {
+    display: flex;
+    justify-content: space-between; /* Para separar precio y acciones */
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+    gap: 15px; /* Espacio entre precio y acciones */
+}
+
+.modal-price {
+    font-size: 1.5em;
+    color: var(--primary-color);
+    font-weight: bold;
+    flex-shrink: 0; /* No permitir que el precio se encoja */
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    flex-grow: 1; /* Permite que el contenedor de acciones ocupe el espacio restante */
+    justify-content: flex-end; /* Alinea los íconos a la derecha */
+}
+
+.modal .buy-button {
+    width: 80%; /* Hacer el botón de comprar más ancho en el modal */
+    max-width: 300px;
+    margin-top: 10px;
+}
+
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Media Queries (Responsive Design) */
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed;
+        right: -100%; /* Ocultar a la derecha */
+        top: 0;
+        width: 70%;
+        height: 100%;
+        background: linear-gradient(to bottom, var(--lila-gradient-start), var(--blue-dark-gradient-end)); /* Gradiente */
+        padding-top: 80px;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+        transition: right 0.4s ease-in-out;
+        z-index: 98;
+        flex-direction: column; /* Apilar elementos en móvil */
+        align-items: center;
+        gap: 0; /* Eliminar gap para lista vertical */
+    }
+
+    .nav-links.active {
+        right: 0; /* Mostrar el slider */
+    }
+
+    .nav-links li {
+        text-align: center;
+        margin: 10px 0;
+        width: 100%; /* Asegurar que los ítems ocupen todo el ancho del menú móvil */
+    }
+
+    .nav-links li a {
+        padding: 15px;
+        display: block;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-links li:last-child a {
+        border-bottom: none;
+    }
+
+    .burger-menu {
+        display: flex; /* Mostrar el botón de hamburguesa en móviles */
+        position: absolute;
+        right: 20px;
+        top: 25px;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr; /* 1 columna para móviles */
+    }
+
+    .hero-section {
+        padding: 50px 15px;
+    }
+
+    .hero-section h1 {
+        font-size: 2.2em;
+    }
+
+    .hero-section p {
+        font-size: 1em;
+    }
+
+    .product-section h2 {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .splash-logo {
+        width: 120px;
+        height: 120px;
+    }
+
+    .loading-text {
+        font-size: 1em;
+    }
+
+    .install-prompt-text {
+        font-size: 0.9em;
+    }
+
+    .install-button {
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+
+    .hero-section h1 {
+        font-size: 1.8em;
+    }
+
+    .hero-section p {
+        font-size: 0.9em;
+    }
+
+    .product-section h2 {
+        font-size: 1.8em;
+    }
+
+    .product-card h3 {
+        font-size: 1.2em;
+    }
+
+    .product-info .price {
+        font-size: 1.1em;
+    }
+
+    .buy-button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .icon-button {
+        width: 35px;
+        height: 35px;
+        font-size: 1em;
+    }
+
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+    }
+
+    #modalProductName {
+        font-size: 1.5em;
+    }
+
+    .modal-price {
+        font-size: 1.3em;
+    }
+
+    .modal .buy-button {
+        width: 90%;
+    }
+}
